@@ -33,6 +33,9 @@ for pcapfile in pcapfiles:
     cap = pyshark.FileCapture(f'{filename}', display_filter="sip.Status-Code == 500")
     cap.load_packets()
     print(f'Total {len(cap)} SIP packets found with status code 500')
+    if not cap:
+        os.remove(f'out\\Sorted_{filename}')
+        continue
     call_ids = []
     for pkt in cap:
         call_id = (str(pkt.raw_sip).split('\r\n')[6]).split(':')[-1][:-4]
