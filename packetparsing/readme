@@ -1,0 +1,8 @@
+ip packets are created in layers
+    Ethernet -> IP -> TCP/UDP -> Application
+
+Use / operator to join the varioud layer
+
+packets are built from an ethernet frame up through multiple layers
+an ethernet frame has a payload which is the IP packet
+an Ip packet has a payload which is TCP/UDP packet

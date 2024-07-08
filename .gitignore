@@ -1,0 +1,7 @@
+.idea
+*__pycache__*
+*.dll
+*.pcap
+*.xlsx
+*.css
+*.exe
