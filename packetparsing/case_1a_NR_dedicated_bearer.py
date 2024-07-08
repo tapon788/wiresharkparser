@@ -57,10 +57,10 @@ def chkPDUSesResModResponse(filename, containString):
     cap = pyshark.FileCapture(f'{filelocation}', display_filter=filt)
     cap.load_packets()
 
-    print(f'Total {len(cap)} packets in response file')
+
     pkt = cap[0]
     msg = pkt.ngap._all_fields['ngap.radioNetwork']
-    print(msg)
+
     comment = ''
     #radioNetwork: xn-handover-triggered (33)
     #radioNetwork: ims - voice - eps - fallback - or -rat - fallback - triggered(36)
@@ -82,7 +82,7 @@ def chkPDUSesResModResponse(filename, containString):
 #def chk5QI()
 
 wb = Workbook('out/out.xlsx')
-ws = wb.add_worksheet('5GDedicatedBearer')
+ws = wb.add_worksheet('WiresharkParsedInfo')
 ws.set_tab_color('#0062AC')
 cell_format_header = wb.add_format(
     {'bold': True, 'font_color': 'white', 'bg_color': '#0062AC', 'border': 1, 'border_color': 'white'})
@@ -99,13 +99,7 @@ colheader = ['sourcePcap',
              'response',
              'comment',
              ]
-ws.set_column(0, 0, 12)
-ws.set_column(1, 1, 20)
-ws.set_column(2, 1, 20)
-ws.set_column(3, 2, 12)
-ws.set_column(4, 3, 25)
-ws.set_column(5, 4, 5)
-ws.set_column(6, 5, 35)
+
 
 
 row = 0
@@ -140,5 +134,12 @@ for filename in pcapfiles:
         ws.write(row, 4, 'Not analysed', cell_format_data)
         ws.write(row, 5, 'Not analysed', cell_format_data)
         ws.write(row, 6, 'Not analysed', cell_format_data)
+ws.set_column(0, 0, 14)
+ws.set_column(1, 1, 20)
+ws.set_column(2, 2, 20)
+ws.set_column(3, 3, 12)
+ws.set_column(4, 4, 22)
+ws.set_column(5, 5, 40)
+ws.set_column(6, 6, 30)
 wb.close()
 os.system('start out/out.xlsx')
