@@ -11,15 +11,26 @@ for files in os.listdir('out'):
         pcapfiles.append(files)
 
 
-def chk4gOr5gCall(filename,containString,field):
+def chk4gOr5gCall(filename,containString,containString2,field):
+
     filelocation = 'out\\'+filename
     cap = pyshark.FileCapture(f'{filelocation}', display_filter=f'_ws.col.info contains \"{containString}\"')
     cap.load_packets()
+    cap2 = pyshark.FileCapture(f'{filelocation}', display_filter=f'_ws.col.info contains \"{containString2}\"')
+    cap2.load_packets()
+
     typeOfCall = ''
     if cap:
         pkt = cap[0]
         invite_arrival_time = pkt.sniff_time
-        typeOfCall = pkt.sip._all_fields['sip.P-Access-Network-Info.access-type']
+
+        try:
+            typeOfCall = pkt.sip._all_fields['sip.P-Access-Network-Info.access-type']
+        except KeyError:
+            typeOfCall = cap2[0].sip._all_fields['sip.P-Access-Network-Info.access-type']
+        except:
+            typeOfCall = 'Unknown'
+
         return {'callType':typeOfCall,'inviteTime':invite_arrival_time}
     else:
         return None
@@ -110,9 +121,8 @@ for filename in pcapfiles:
 
     print(f'Working with {filename}')
     row += 1
-    callTypeInfo = chk4gOr5gCall(filename,'Request: INVITE','sip.P-Access-Network-Info.access-type')
+    callTypeInfo = chk4gOr5gCall(filename,'Request: INVITE','Status: 183 Session Progress',"sip.P-Access-Network-Info.access-type")
     pduInfo = chkPDUSesResModReqAnd5QI(filename, 'PDUSessionResourceModifyRequest', 'ngap.fiveQI')
-    #print(pduInfo)
 
     source_file = '_'.join(filename.split('.')[0].split('_')[:-1])
     ws.write(row, 0, source_file, cell_format_data)

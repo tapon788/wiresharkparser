@@ -38,7 +38,8 @@ for pcapfile in pcapfiles:
         continue
     call_ids = []
     for pkt in cap:
-        call_id = (str(pkt.raw_sip).split('\r\n')[6]).split(':')[-1][:-4]
+        #call_id = (str(pkt.raw_sip).split('\r\n')[6]).split(':')[-1][:-4]
+        call_id = pkt.sip._all_fields['sip.Call-ID']
         if call_id not in call_ids:
             call_ids.append(call_id)
     print(f'\nFollowing distinct call ids found in {filename}\n{[x.split(" ")[-1] for x in call_ids]}')
