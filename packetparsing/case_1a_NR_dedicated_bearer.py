@@ -18,6 +18,7 @@ def chk4gOr5gCall(filename,containString,containString2,field):
     invite_arrival_time = cap[0].sniff_time
     typeOfCall = ''
     if cap:
+
         for pkt in cap:
             try:
                 typeOfCall = pkt.sip._all_fields['sip.P-Access-Network-Info.access-type']
@@ -98,7 +99,7 @@ colheader = ['sourcePcap',
              'problematicCallId',
              'inviteTime',
              'callType',
-             'messageType',
+             'PDUMessage',
              'response',
              'comment',
              ]
